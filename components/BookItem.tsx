@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 interface BookItemProps {
   coverImage: string;
@@ -7,6 +7,7 @@ interface BookItemProps {
   author: string;
   pages: string;
   genre: string;
+  cardPress: any;
 }
 
 export default function BookItem({
@@ -15,9 +16,10 @@ export default function BookItem({
   author,
   pages,
   genre,
+  cardPress,
 }: BookItemProps) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={cardPress}>
       <Image source={{ uri: coverImage }} style={styles.coverImage} />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{title}</Text>
@@ -25,7 +27,7 @@ export default function BookItem({
         <Text style={styles.details}>{pages} pages</Text>
         <Text style={styles.details}>{genre}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

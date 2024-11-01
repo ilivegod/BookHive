@@ -1,10 +1,16 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import axios from "axios";
 
 import { useQuery } from "@tanstack/react-query";
 import BookItem from "@/components/BookItem";
+import { ChevronDown } from "lucide-react-native";
+
+import { Link, router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "@/components/Header";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const home = () => {
   const [query, setQuery] = useState<string>("");
@@ -29,34 +35,38 @@ const home = () => {
     enabled: false,
   });
 
+  const handleCardPress = (id: any) => {
+    router.push(`/bookScreen/${id}`);
+  };
+
+  const handleGoBack = () => {
+    console.log("back pressed");
+  };
+
   //console.log("booksData:", booksData);
   return (
-    <View>
+    <SafeAreaView>
+      <Header onBackPress={handleGoBack} />
+
       <SearchBar onSearch={refetch} value={query} setValue={setQuery} />
       <FlatList
         data={booksData}
         renderItem={({ item }) => (
           <BookItem
             coverImage={
-              item?.volumeInfo?.imageLinks?.thumbnail || "no image available"
+              item?.volumeInfo?.imageLinks?.smallThumbnail ||
+              "no image available"
             }
             title={item?.volumeInfo?.title}
             author={item?.volumeInfo?.authors?.join(", ")}
             pages={item?.volumeInfo?.pageCount}
             genre={item?.volumeInfo.categories?.join(", ")}
+            cardPress={() => handleCardPress(item?.id)}
           />
         )}
         keyExtractor={(item) => item.id}
       />
-      {/* <BookItem
-        coverImage="https://unsplash.com/photos/books-on-brown-wooden-shelf-Ft_Wn-K5YH8"
-        title="Harry Potter and the half blood prince"
-        author="J.K Rowlings"
-        pages="365 pages"
-        genre="Fantasy , adventure"
-      /> */}
-      <Text>welcome home</Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
